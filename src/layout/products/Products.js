@@ -12,16 +12,16 @@ const Products = () => {
     const [productsData, setProductsData] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const [displayProducts, setDisplayProducts] = useState([]); // For managing displayed products
+    const [displayProducts, setDisplayProducts] = useState([]);
     const [limit, setLimit] = useState(20);
 
     useEffect(() => {
-        fetch(`https://dummyjson.com/products?limit=100`) // Consider fetching more data upfront if your API supports it
+        fetch(`https://dummyjson.com/products?limit=100`)
         .then((response) => response.json())
         .then((data) => {
             setProductsData(data.products);
             setFilteredProducts(data.products);
-            setDisplayProducts(data.products.slice(0, limit)); // Initialize displayed products based on limit
+            setDisplayProducts(data.products.slice(0, limit));
         })
         .catch((error) => {
             console.error('Error fetching data:', error);
@@ -29,24 +29,23 @@ const Products = () => {
     }, []);
 
     useEffect(() => {
-        // Update displayed products when limit or filteredProducts changes
         setDisplayProducts(filteredProducts.slice(0, limit));
     }, [limit, filteredProducts]);
 
     const handleSearch = () => {
         const filtered = productsData.filter(product => product.title.toLowerCase().includes(searchTerm.toLowerCase()));
         setFilteredProducts(filtered);
-        setLimit(20); // Reset limit, but useEffect will take care of slicing for display
+        setLimit(20);
     };
 
     const handleClear = () => {
         setSearchTerm('');
-        setFilteredProducts(productsData); // Reset to original products
-        setLimit(20); // Reset limit, useEffect will update displayed products
+        setFilteredProducts(productsData);
+        setLimit(20);
     };
 
     const loadMoreProducts = () => {
-        setLimit(prevLimit => Math.min(prevLimit + 20, filteredProducts.length)); // Prevent limit from exceeding total number of filtered products
+        setLimit(prevLimit => Math.min(prevLimit + 20, filteredProducts.length));
     };
 
     return (
@@ -58,15 +57,15 @@ const Products = () => {
 
                 <div className='shadow-6 rounded-5 py-3 mb-4'>
                     <MDBRow className="mb-4 d-flex justify-content-center py-2 mt-4">
-                        <MDBCol md="auto" className='w-50'> {/* Adjust the column sizes as necessary */}
+                        <MDBCol md="auto" className='w-50'> 
                             <MDBInput label="Search Products" type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="mb-2 mb-md-0" /> {/* Added marginBottom for better mobile responsiveness */}
                         </MDBCol>
                         <div className='d-flex justify-content-center gap-4 mt-3'>
-                            <MDBCol md="auto"> {/* For the buttons to adjust automatically */}
+                            <MDBCol md="auto"> 
                                 <MDBBtn rounded color='info' disabled={!searchTerm} onClick={handleSearch}>Search</MDBBtn>
                             </MDBCol>
 
-                            <MDBCol md="auto"> {/* For the buttons to adjust automatically */}
+                            <MDBCol md="auto"> 
                                 <MDBBtn rounded color='danger' disabled={!searchTerm} onClick={handleClear}>Clear</MDBBtn>
                             </MDBCol>
                         </div>
